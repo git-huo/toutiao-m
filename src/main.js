@@ -6,7 +6,9 @@ import store from './store'
 import '@/assets/fonts/iconfont.css'
 import Vant from 'vant';
 import 'vant/lib/index.css';
-
+import storeage from '@/utils/storage';
+//引入rem适配
+import 'amfe-flexible'
 Vue.use(Vant);
 Vue.config.productionTip = false
 
