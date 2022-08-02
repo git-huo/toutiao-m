@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 文章列表 -->
     <van-pull-refresh
       v-model="refreshLoading"
       @refresh="loadNextPageArticle"
@@ -21,8 +22,9 @@
           :articlesInfo="item"
         >
         </ArticleItem>
-      </van-list> </van-pull-refresh
-    >Í
+      </van-list>
+    </van-pull-refresh>
+    <!-- 频道弹层 -->
   </div>
 </template>
 
