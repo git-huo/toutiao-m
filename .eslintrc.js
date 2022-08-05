@@ -17,6 +17,5 @@ module.exports = {
     'no-undef': 'off',
     'key-spacing': 'off',
     'eol-last': 'off'
-
   }
 }
