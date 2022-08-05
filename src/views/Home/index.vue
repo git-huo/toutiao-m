@@ -20,21 +20,31 @@
       closeable
       close-icon-position="top-left"
     >
-      <channel-popup> </channel-popup>
+      <channel-popup
+        :myChannels="myChannels"
+        @close="show = false"
+        @change-active="active = $event"
+        @del-channel="delChannel"
+        @add-channel="addChannel"
+      >
+      </channel-popup>
     </van-popup>
   </div>
 </template>
 
 <script>
-import { getMyChannel as getMyChannelAPI } from '@/api'
+import {
+  getMyChannel as getMyChannelAPI,
+  delChannel,
+  addChannel,
+  setMyChannerlToLocal,
+  getMyChannerlByLocal
+} from '@/api'
 import ArticleList from './components/ArticleList.vue'
 import ChannelPopup from './components/ChannelPopup.vue'
 export default {
   components: { ArticleList, ChannelPopup },
   name: 'Home',
-  comments: {
-    ArticleList
-  },
   data() {
     return {
       active: 0,
@@ -43,9 +53,32 @@ export default {
     }
   },
   created() {
-    this.getMyChannel()
+    this.initMyChannels()
+  },
+  computed: {
+    isLogin() {
+      return !!this.$store.state.tokenObj.token
+    }
   },
   methods: {
+    //初始化mychannel数据
+    initMyChannels() {
+      if (this.isLogin) {
+        //用户登陆了
+        this.getMyChannel()
+      } else {
+        //用户未登录
+        const MyChannels = getMyChannerlByLocal()
+        if (MyChannels) {
+          //本地储存有数据，从本读储存拿
+          this.myChannels = MyChannels
+        } else {
+          //本地储存没有数据，获取默认数据
+          this.getMyChannel()
+        }
+      }
+    },
+
     async getMyChannel() {
       try {
         const { data } = await getMyChannelAPI()
@@ -54,6 +87,48 @@ export default {
       } catch (error) {
         console.dir(error)
         this.$toast.fail('获取频道失败，请刷新')
+      }
+    },
+    //删除频道
+    async delChannel(id) {
+      this.$toast.loading({
+        message: '正在删除频道...',
+        forbidCick: true
+      })
+      try {
+        const newChannels = this.myChannels.filter((item) => item.id !== id)
+        if (this.isLogin) {
+          // this.myChannels = newChannels
+          await delChannel(id)
+        } else {
+          setMyChannerlToLocal(newChannels)
+        }
+        // //删除服务器数据
+        // await delChannel(id)
+        //删除页面数据
+        this.myChannels = newChannels
+        this.$toast.success('删除频道成功')
+      } catch (error) {
+        this.$toast.fail('删除频道失败')
+      }
+    },
+    //添加频道
+    async addChannel(item) {
+      this.$toast.loading({
+        message: '正在添加频道...',
+        forbidCick: true
+      })
+      try {
+        if (this.isLogin) {
+          await addChannel(item.id, this.myChannels.length)
+        } else {
+          setMyChannerlToLocal([...this.myChannels, item])
+        }
+        // await addChannel(item.id, this.myChannels.length)
+        this.myChannels.push(item)
+        this.$toast.success('添加频道成功')
+      } catch (error) {
+        this.$toast.fail('添加频道失败')
       }
     }
   }

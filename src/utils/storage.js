@@ -7,7 +7,7 @@ class Storage {
     //如果是JSON，直接parse
     //如果不是直接返回value
     try {
-      return JSON.parse(key)
+      return JSON.parse(value)
     } catch (error) {
       return value
     }
