@@ -2,7 +2,9 @@
   <div>
     <!-- 头部 -->
     <header>
-      <div class="login" v-if="isLogin">登陆后的盒子</div>
+      <div class="login" v-if="isLogin">登陆后的盒子
+      <button @click="$router.push('/user')">编辑按钮</button>
+      </div>
       <div class="loginout" v-else>未登陆后的盒子</div>
     </header>
     <main>收藏/历史/消息通知/小智同学</main>
