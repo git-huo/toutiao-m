@@ -17,7 +17,7 @@
     <!-- <search-suggestion></search-suggestion>
     <search-result></search-result>
     <search-history></search-history> -->
-    <component :is="componentName" :keywords="keywords"></component>
+    <component :is="componentName" :keywords="keywords" @str="str"></component>
   </div>
 </template>
 
@@ -63,6 +63,10 @@ export default {
       //如果keyword为‘’，显示搜索历史
       //如果keywords有值，显示显示建议
       this.isShowSearchResult = false
+    },
+    str(str) {
+      this.keywords = str
+      // this.$store.commit('SET_SEARCH', this.keywords)
     }
   }
 }

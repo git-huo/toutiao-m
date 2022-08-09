@@ -6,7 +6,6 @@ import store from './store'
 import '@/assets/fonts/iconfont.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-
 //引入rem适配
 import 'amfe-flexible'
 Vue.use(Vant)

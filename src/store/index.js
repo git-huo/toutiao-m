@@ -7,9 +7,14 @@ export default new Vuex.Store({
   state: {
     //tokenObj: JSON.parse(localStorage.getItem("HEIMA_TOUTIAO_TOKEN",)) || {}
     tokenObj: getToken() || {}
+    // searchList: []
   },
   getters: {},
   mutations: {
+    // SET_SEARCH(state, value) {
+    //   state.searchList = value
+    // },
+
     SET_TOKEN(state, value) {
       //存入vuex仓库中
       state.tokenObj = value

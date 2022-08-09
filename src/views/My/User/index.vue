@@ -22,11 +22,41 @@
     /></van-cell>
     <!-- 弹出层 -->
     <van-popup
+      class="avator-popup"
       v-model="isShowAvator"
       closeable
       :style="{ height: '100%', width: '100%' }"
     >
-      <update-avator :photo="photo" v-if="isShowAvator" @update-avatr="userInfo.photo=$event"></update-avator>
+      <update-avator
+        :photo="photo"
+        v-if="isShowAvator"
+        @update-avatr="userInfo.photo = $event"
+      ></update-avator>
+    </van-popup>
+    <!-- 昵称 -->
+    <van-cell title="昵称" is-link @click="showss = true">
+      <template #default>
+        {{ userInfo.name }}
+      </template>
+    </van-cell>
+    <!-- 弹层 -->
+    <van-popup v-model="showss" position="bottom" :style="{ height: '100%' }">
+      <upname-avator></upname-avator>
+    </van-popup>
+    <!-- 性别 -->
+    <van-cell title="性别" is-link @click="showsss = true">
+      <template #default> {{ userInfo.gender == 1 ? '女' : '男' }} </template>
+    </van-cell>
+    <!-- 弹层 -->
+    <van-popup v-model="showsss" position="bottom" :style="{ height: '30%' }">
+      <upgender-avator></upgender-avator>
+    </van-popup>
+    <!-- 生日 -->
+    <van-cell title="生日" is-link @click="showssss = true">
+      <template #default> {{ userInfo.birthday }} </template>
+    </van-cell>
+    <van-popup v-model="showssss" position="bottom" :style="{ height: '30%' }">
+      <upbirthday-avator v-model ="userInfo.birthday"></upbirthday-avator>
     </van-popup>
   </div>
 </template>
@@ -34,11 +64,17 @@
 <script>
 import { getUserInfo } from '@/api'
 import updateAvator from './components/updateAvator'
+import upnameAvator from './components/upnameAvator'
+import upgenderAvator from './components/upgenderAvator'
+import upbirthdayAvator from './components/upbirthdayAvator.vue'
 import { resolveToBase64 } from '@/utils'
 export default {
   name: 'User',
   components: {
-    updateAvator
+    updateAvator,
+    upnameAvator,
+    upgenderAvator,
+    upbirthdayAvator
   },
   created() {
     this.getUserInfo()
@@ -47,7 +83,10 @@ export default {
     return {
       userInfo: [],
       isShowAvator: false,
-      photo: ''
+      photo: '',
+      showss: false,
+      showsss: false,
+      showssss: false
     }
   },
   methods: {
@@ -55,6 +94,7 @@ export default {
       try {
         const { data } = await getUserInfo()
         this.userInfo = data.data
+        console.log(this.userInfo)
       } catch (error) {
         this.$toast.fail('获取失败，请刷新')
       }
@@ -95,7 +135,7 @@ export default {
     color: #fff;
   }
 }
-.van-popup {
+.avator-popup {
   background-color: #000;
 }
 </style>

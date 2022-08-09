@@ -4,6 +4,7 @@
       v-for="(item, index) in highlightSuggestions"
       :key="index"
       icon="search"
+      @click="toClick(index)"
     >
       <template #title>
         <span v-html="item"> </span>
@@ -12,7 +13,7 @@
   </div>
 </template>
 <script>
-import { getSearchSuggestionAPI } from '@/api'
+import { getSearchSuggestionAPI, getSearchAPI } from '@/api'
 import { debounce } from 'lodash'
 export default {
   props: {
@@ -32,10 +33,7 @@ export default {
       const red = new RegExp(this.keywords, 'ig')
 
       return this.suggestions.map((item) =>
-        item.replace(
-          red,
-          (match) => `<span style='color:red' > ${match}</span>`
-        )
+        item.replace(red, (match) => `<span style='color:red'>${match}</span>`)
       )
     }
   },
@@ -54,7 +52,17 @@ export default {
       } catch (error) {
         this.$toast.fail('搜索失败')
       }
-    }, 300)
+    }, 300),
+    toClick(id) {
+      console.log(id)
+      // console.log(this.suggestions)
+      const str = this.suggestions
+        .filter((item, index) => index === id)
+        .toString()
+      getSearchAPI(str)
+      this.$emit('str', str)
+      this.$parent.isShowSearchResult = true
+    }
   },
   watch: {
     keywords: {
